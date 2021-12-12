@@ -12,7 +12,7 @@ import static org.example.youtubeh1.dao.HibernateTest.*;
 import static org.junit.Assert.*;
 
 public class WriteStudentDaoImplTest {
-    private final StudentDao dao = new StudentDaoImpl();
+    private final StudentDao dao = new StudentDaoJpqlImpl();
 
     @Test
     public void findUserById() {

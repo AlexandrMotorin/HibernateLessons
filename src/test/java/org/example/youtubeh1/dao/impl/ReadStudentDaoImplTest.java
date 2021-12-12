@@ -1,9 +1,11 @@
 package org.example.youtubeh1.dao.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.example.youtubeh1.dao.StudentDao;
 import org.example.youtubeh1.model.persistance.Student;
-import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 import java.util.Arrays;
 import java.util.List;
@@ -12,9 +14,10 @@ import java.util.Optional;
 import static org.example.youtubeh1.dao.HibernateTest.*;
 import static org.junit.Assert.*;
 
+
 public class ReadStudentDaoImplTest {
 
-    private final StudentDao dao = new StudentDaoImpl();
+    private final StudentDao dao = new StudentDaoJpqlImpl();
 
     @Test
     public void findByIdTest(){

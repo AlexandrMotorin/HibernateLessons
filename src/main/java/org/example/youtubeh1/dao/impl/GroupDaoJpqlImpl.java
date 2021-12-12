@@ -7,10 +7,12 @@ import org.example.youtubeh1.util.SessionUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import javax.persistence.NoResultException;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalInt;
 
-public class GroupDaoImpl implements GroupDao {
+public class GroupDaoJpqlImpl implements GroupDao {
     @Override
     public Optional<Group> findById(Long id) {
         Session session = SessionUtil.createSession();
@@ -65,7 +67,6 @@ public class GroupDaoImpl implements GroupDao {
             return optionalGroup;
         }
 
-
         Session session = SessionUtil.createSession();
         Transaction transaction = session.beginTransaction();
 
@@ -74,5 +75,42 @@ public class GroupDaoImpl implements GroupDao {
         transaction.commit();
         session.close();
         return optionalGroup;
+    }
+
+    @Override
+    public OptionalInt countStudentsInGroup(Long id) {
+        try(Session session = SessionUtil.createSession()){
+
+            Integer count = session.createQuery("select size(g.students) from Group g where g.id=?1", Integer.class)
+                    .setParameter(1, id)
+                    .getSingleResult();
+
+            return OptionalInt.of(count);
+        }catch (NoResultException e){
+            return OptionalInt.empty();
+        }
+    }
+
+    @Override
+    public List<Group> findWhereCountStudentsEqualsThenN(int n) {
+        try(Session session = SessionUtil.createSession()){
+            return session.createQuery("from Group g where size(g.students)=?1", Group.class)
+                    .setParameter(1, n)
+                    .getResultList();
+        }
+    }
+
+    @Override
+    public Optional<Group> findByGroupIdWithStudents(long n) {
+        try(Session session = SessionUtil.createSession()){
+            Group singleResult = session.createQuery("from Group g " +
+                    "join fetch g.students " +
+                    "where g.id=?1", Group.class)
+                    .setParameter(1, n)
+                    .getSingleResult();
+            return Optional.of(singleResult);
+        }catch (NoResultException e){
+            return Optional.empty();
+        }
     }
 }

@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-public class StudentDaoImpl implements StudentDao {
+public class StudentDaoJpqlImpl implements StudentDao {
     @Override
     public Optional<Student> findById(Long id) {
         Session session = SessionUtil.createSession();
@@ -83,7 +83,6 @@ public class StudentDaoImpl implements StudentDao {
             return student;
         }
 
-
         Session session = SessionUtil.createSession();
         Transaction transaction = session.beginTransaction();
 
@@ -111,14 +110,20 @@ public class StudentDaoImpl implements StudentDao {
 
     @Override
     public List<Student> findByGroupId(Long id) {
-        Session session = SessionUtil.createSession();
+        try(Session session = SessionUtil.createSession()) {
+            return session.createQuery("from Student where group.id  = ?1", Student.class)
+                    .setParameter(1, id)
+                    .getResultList();
+        }
+    }
 
-        List<Student> resultList = session.createQuery("from Student where group.id = ?1", Student.class)
-                .setParameter(1, id)
-                .getResultList();
-
-        session.close();
-
-        return resultList;
+    @Override
+    public List<Student> findByGroupIdWithSortedByBirthday(Long id) {
+        try(Session session = SessionUtil.createSession()) {
+            return session.createQuery("from Student s where s.group.id  = ?1 " +
+                    "order by s.birthday", Student.class)
+                    .setParameter(1, id)
+                    .getResultList();
+        }
     }
 }

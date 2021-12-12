@@ -1,9 +1,6 @@
 package org.example.youtubeh1.dao;
 
-import org.example.youtubeh1.dao.impl.GroupDaoImpl;
-import org.example.youtubeh1.dao.impl.StudentDaoImpl;
-import org.example.youtubeh1.dao.impl.ReadStudentDaoImplTest;
-import org.example.youtubeh1.dao.impl.WriteStudentDaoImplTest;
+import org.example.youtubeh1.dao.impl.*;
 import org.example.youtubeh1.model.persistance.Address;
 import org.example.youtubeh1.model.persistance.Group;
 import org.example.youtubeh1.model.persistance.Student;
@@ -17,12 +14,14 @@ import java.time.LocalDate;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         ReadStudentDaoImplTest.class,
-        WriteStudentDaoImplTest.class
+        WriteStudentDaoImplTest.class,
+        ReadGroupDaoImpTest.class,
+        StudentDaoParametrizedList.class
 })
 public class HibernateTest {
 
-    private final static StudentDao STUDENT_DAO = new StudentDaoImpl();
-    private final static GroupDao GROUP_DAO = new GroupDaoImpl();
+    private final static StudentDao STUDENT_DAO = new StudentDaoJpqlImpl();
+    private final static GroupDao GROUP_DAO = new GroupDaoJpqlImpl();
 
     public static final Address ADDRESS_1 = new Address();
     public static final Address ADDRESS_2 = new Address();
